@@ -190,59 +190,14 @@
 |Marital|No, 3 distinct values|Yes, 'married': 56.9%<br>Could be key differentiator|Not found|Not found|Not found|Not found|- One-hot encoding<br>- Binary grouping because 'single' has higher target association.|
 |Education|No, 4 distinct values|Yes, 'secondary': 49%<br>Could be key differentiator|Yes, 'unknown':4.45%|Not found|Not found|Not found|- One-hot encoding<br>- Ordinal mapping: unknown < primary < secondary < tertiary|
 |Contact|No, 3 distinct values|Yes, 'Cellular': 72%|'Unknown': 21%|Not found|Not found|Not found|- One-hot encoding
-|Month|No, 12 distinct values|No, most one accounts for 25%|Not found|Not found|Not found|Not found|- Cyclic encoding<br>Grouping by quarter
-|Poutcome|No, 4 distinct values|Yes, 'Unknown': 75%|Yes, 'Other': 5%|Not found|Not found|Not found|- one-hot encoding
+|Month|No, 12 distinct values|No, most one accounts for 25%|Not found|Not found|Not found|Not found|- Cyclic encoding<br>- Grouping by quarter
+|Poutcome|No, 4 distinct values|Yes, 'Unknown': 75%|Yes, 'Other': 5%|Not found|Not found|Not found|- One-hot encoding
 
 ### Step 2-4: Inspect Boolean Type Columns for Proportional Visualization
 |Boolean Column|Imbalance Flag|Class Imbalance|Feature Engineering|
 |:---:|:---:|:---:|:---:|
-|Default|'False': 98%<br>This is normal case.|'False' has higher deposit rate but < 0.5|No action required|
-|Housing|'False': 53%|Yes, 'False' has higher deposit rate > 0.5|No action required|
-|Loan|'False': 87%|'False' has higher deposit rate but < 0.5|No action required|
-
-
-#### <b>Dominant Category with Low Variance (Imbalanced Column)</b>
-- Default: 98.5% as no (this is normal as most of people should not be with default credit)
-- Loan: 86.9% as no (this is normal as most of people should not be with personal loan)
-
-
-
-
-3. 📈 Interaction Features
-Combine 'marital' with other columns like 'education', 'job', or 'poutcome' to capture compound effects
-
-python
-df['marital_edu'] = df['marital'] + '_' + df['education']
-Useful if 'single_secondary' behaves differently than 'married_secondary'.
-
-4. 📅 Campaign Timing Sensitivity
-Create a feature like is_married_in_summer if 'month' shows seasonal variation in deposit behavior by marital status
-
-Could be relevant for financial planning cycles or family budgeting periods.
-
-5. 📋 Ordinal Mapping (if justified)
-If there's a business rationale (e.g., stability or financial responsibility), map to ordinal scale:
-
-python
-marital_map = {'single': 0, 'divorced': 1, 'married': 2}
-df['marital_score'] = df['marital'].map(marital_map)
-Use with caution—only if supported by domain logic or target association.
-
-6. 📊 Deposit Rate Annotation
-Create a feature that maps each marital status to its observed deposit rate (from EDA)
-
-python
-deposit_rates = df.groupby('marital')['deposit'].mean().to_dict()
-df['marital_deposit_rate'] = df['marital'].map(deposit_rates)
-This embeds historical performance directly into the feature.
-
-🧩 Stakeholder Notes to Capture
-Insight	Note
-Distribution	% of each marital status
-Deposit Rate	Which group converts better
-Encoding Strategy	One-hot vs. binary grouping
-Interaction Potential	Combine with job, education, or month
-Business Framing	Financial stability, independence, campaign timing relevance
-
+|Default|'False': 98%<br>This is generally reasonable.|'False' has higher deposit rate but < 0.5|No action required|
+|Housing|'False': 53%<br>This is generally reasonable.|Yes, 'False' has higher deposit rate > 0.5|No action required|
+|Loan|'False': 87%<br>This is generally reasonable.|'False' has higher deposit rate but < 0.5|No action required|
 
 
